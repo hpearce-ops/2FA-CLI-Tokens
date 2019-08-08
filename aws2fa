@@ -1,0 +1,117 @@
+#!/usr/bin/env python3
+"""
+    Use the users credentials to talk to AWS STS.
+    We pass STS a 2 factor code and get back a time limited set of credentials
+    Works well with this IAM policy:
+    https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_examples_aws_my-sec-creds-self-manage.html
+"""
+import configparser
+import json
+import os
+
+import boto3
+
+STS = ""
+NEW_PROFILE = ""
+USER_KEY = ""
+USER_SECRET_KEY = ""
+PATH = ""
+DURATION = 900  # CONFIGURE - recommended '32400' (9 hours)
+PROFILE = ""
+
+
+# Enter the AWS credential profile you would like to use.
+# On first time use, use 'default'. Every time after, use the profile you create
+# during configuration.
+# ***WARNING***
+# If you select 'default' after first time use, you will DELETE your AWS user's keys
+
+
+def parse(response):
+    """ Parse the json blob that the STS service returns to us and write it to our config file """
+    global NEW_PROFILE
+    global USER_KEY
+    global USER_SECRET_KEY
+    global PATH
+
+    dump = json.dumps(response, default=str)
+    dictionary = json.loads(dump)
+    print(dictionary["Credentials"])
+    # places session info into a dictionary
+
+    key_info = dictionary["Credentials"]
+    key = key_info["AccessKeyId"]
+    secret_key = key_info["SecretAccessKey"]
+    session_token = key_info["SessionToken"]
+
+    config = configparser.ConfigParser()
+    # using config parser, the aws credentials file will be rewritten.
+    # it will contain the session keys and token under 'default', and your AWS user's
+    # access keys under the specified value for 'newProfile'
+    config['default'] = {'aws_access_key_id': key,
+                         'aws_secret_access_key': secret_key,
+                         'aws_session_token': session_token}
+    config[NEW_PROFILE] = {'aws_access_key_id': USER_KEY,
+                           'aws_secret_access_key': USER_SECRET_KEY}
+    with open(PATH, 'w') as configfile:
+        config.write(configfile)
+
+
+def create_session(duration, serial, token):
+    """ Create an STS session and pass the output to the parser """
+    response = STS.get_session_token(
+        DurationSeconds=duration,
+        SerialNumber=serial,
+        TokenCode=token
+    )
+    parse(response)
+
+
+def get_user_input_for_token():
+    """ Ask the user in input their MFA id """
+    serial = input(
+        "Please enter the ID number for the MFA device associated with your user: ")
+    token = input("Please enter a token code provided by your MFA device: ")
+    create_session(DURATION, serial, token)
+
+
+def define_session():
+    """ Get our STS session from AWS """
+    global STS
+    global PROFILE
+
+    session = boto3.Session(profile_name=PROFILE)
+    STS = session.client('sts')
+
+
+if __name__ == '__main__':
+    PATH = os.path.expanduser("~") + "/.aws/credentials"
+    PROFILE = input("Please enter the profile you would like to use: ")
+
+    if PROFILE == "default":
+        print(
+            "You chose 'default' as your profile name. Do you need to configure this app?")
+        ANSWER = input("y/n: ")
+        if ANSWER == "y":
+            # type a new user name that will hold your credentials currently under 'default'
+            NEW_PROFILE = input("Please enter the name of your new profile: ")
+            CONFIG = configparser.ConfigParser()
+            CONFIG.read(PATH)
+            USER_KEY = CONFIG['default']['aws_access_key_id']
+            USER_SECRET_KEY = CONFIG['default']['aws_secret_access_key']
+            define_session()  # creates a session using the profile you specified
+            get_user_input_for_token()
+        elif ANSWER == "n":
+            print(
+                "If you do not need to configure this app, please do not use your 'default' key pair.")
+            PROFILE = input("Please enter the profile you would like to use: ")
+        else:
+            print("Please enter 'y' or 'n'.")
+    else:
+        NEW_PROFILE = PROFILE
+        CONFIG = configparser.ConfigParser()
+        CONFIG.read(PATH)
+        USER_KEY = CONFIG[PROFILE]['aws_access_key_id']
+        USER_SECRET_KEY = CONFIG[PROFILE]['aws_secret_access_key']
+        define_session()
+        get_user_input_for_token()
