@@ -6,6 +6,6 @@ Instrucutions below are for Mac OSX.
 
 ### Prerequistes 
 Install Python 3.7 using Homebrew.
-'''
+```
 brew install Python
-'''
+```
