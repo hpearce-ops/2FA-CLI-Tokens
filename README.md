@@ -32,4 +32,6 @@ If you have output similar to the one below, you're all set!
 Python 3.7.4
 ```
 
+#### Dependencies
+
 #### Code
