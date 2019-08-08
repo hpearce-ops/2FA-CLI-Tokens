@@ -9,7 +9,7 @@ Instrucutions below are for Mac OSX.
 #### Python
 Install Python 3.7 using Homebrew.
 ```
-brew install Python
+brew install python
 ```
 Create an alias so that you can use Python 3.7 when calling ```python```.
 ```
