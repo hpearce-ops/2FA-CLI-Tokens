@@ -39,3 +39,13 @@ pip install boto3
 ```
 
 #### Code
+Download [aws2fa](https://github.com/hpearce-ops/2FA-CLI-Tokens/blob/master/aws2fa) and move it to the bin directory. 
+```
+mv aws2fa /usr/local/bin/
+```
+Now you should be able to execute the script by entering:
+```
+aws2fa
+```
+
+### Execution
