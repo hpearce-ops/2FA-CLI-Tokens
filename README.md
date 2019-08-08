@@ -48,4 +48,23 @@ Now you should be able to execute the script by entering:
 aws2fa
 ```
 
-### Execution
+### First Time Use
+After entering the 'aws2fa' command, you will need to input some user information. The first request will be:
+```
+Please enter the profile you would like to use:
+```
+Here, you will input a profile found in '~/.aws/credentials/'. 
+##### NOTE: 
+If this is your first time executing the script, please enter 'default' to use the key pair associated with your AWS user. 
+When you enter default, you will then see this output:
+```
+You chose 'default' as your profile name. Do you need to configure this app?
+y/n:
+```
+If this is your first time using the script, enter 'y', else enter 'n'. If you enter 'y', you will be prompted to enter the name of your new profile:
+```
+Please enter the name of your new profile:
+```
+This will be the new profile in your '~/.aws/credentials/' file for your AWS user's keys. This allows the session token and keys to be placed under 'default'. This means it isn't necessary to execute all AWS commands with --profile if you want to use the session keys. 
+
+
