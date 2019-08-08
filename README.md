@@ -33,5 +33,9 @@ Python 3.7.4
 ```
 
 #### Dependencies
+Execute the following command to make sure you have the required package. 
+```
+pip install boto3
+```
 
 #### Code
