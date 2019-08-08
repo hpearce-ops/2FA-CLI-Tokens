@@ -88,7 +88,7 @@ Additionally, you can run a command like ```aws s3 ls``` to see if the session k
 ### General Usage 
 For every use after the first time, it is highly reccomended you use the ```[exampleUser]``` profile when creating session keys. This ensure's that your AWS user's keys are not deleted from the aws credentials file when ou execute ```aws2fa```.
 
-### Changing session time.
+#### Changing Session Time
 If you want to change how long sessions last, open up the script file in the editor of your choice and simply change the following line to your preference:
 ```
 DURATION = 900
