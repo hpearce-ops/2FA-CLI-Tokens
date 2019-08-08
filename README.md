@@ -1,5 +1,5 @@
 # 2FA-CLI-Tokens
-Provide session tokens for your AWS CLI. 
+Provide session tokens for your AWS CLI. Works well with [this IAM Policy](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_examples_aws_my-sec-creds-self-manage.html).
 
 ## Getting Started 
 Instrucutions below are for Mac OSX.
