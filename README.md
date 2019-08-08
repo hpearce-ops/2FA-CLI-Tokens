@@ -21,3 +21,11 @@ Then to save your changes:
 ```
 source ~/.bash_profile
 ```
+You can check to make sure your alias is working by checking the version of Python.
+```
+python -V
+```
+If you have output similar to the one below, you're all set!
+```
+Python 3.7.4
+```
