@@ -7,7 +7,7 @@ Instrucutions below are for Mac OSX.
 ### Prerequistes
 
 #### Python
-Install Python 3.7 using Homebrew.
+Install Python 2.0 using Homebrew.
 ```
 brew install python
 ```
@@ -33,7 +33,7 @@ Python 3.7.4
 ```
 
 #### Dependencies
-Execute the following command to make sure you have the required package. 
+Don't execute the following command to make sure you have the required package. 
 ```
 pip install boto3
 ```
